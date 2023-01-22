@@ -1,0 +1,388 @@
+# 将proxy-providers里面链接中的“订阅链接”替换即可
+
+mixed-port: 7890
+allow-lan: true
+bind-address: '*'
+mode: rule
+log-level: info
+ipv6: true
+external-controller: 127.0.0.1:9090
+
+dns:
+  enable: true
+  ipv6: true
+  listen: 0.0.0.0:53
+  default-nameserver:
+    - 119.29.29.29
+    - 223.5.5.5
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - '*.lan'
+    - localhost.ptlogin2.qq.com
+    - '+.srv.nintendo.net'
+    - '+.stun.playstation.net'
+    - '+.msftconnecttest.com'
+    - '+.msftncsi.com'
+    - '+.xboxlive.com'
+    - 'msftconnecttest.com'
+    - 'xbox.*.microsoft.com'
+    - '*.battlenet.com.cn'
+    - '*.battlenet.com'
+    - '*.blzstatic.cn'
+    - '*.battle.net'
+  nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+    
+proxies:
+
+proxy-providers:
+  # Personal:
+  #   type: http
+  #   url: https://gitea.kyosakuyo.com/KyoSakuyo/SakuyoDb/raw/branch/main/test.yaml
+  #   interval: 3700
+  #   path: ./proxys/personal.yaml
+  #   health-check:
+  #     enable: true
+  #     interval: 600
+  #     url: http://www.gstatic.com/generate_204
+      
+  mojie:
+   type: http
+   path: ./proxys/mojie.yaml
+   url: https://mojie.art/api/v1/client/subscribe?token=4fc93c89a6fba8189f4d8c7eb1ca61a6
+   interval: 3700
+   health-check:
+     enable: true
+     url: http://www.gstatic.com/generate_204
+     interval: 300
+
+  linkhub:
+   type: http
+   path: ./proxys/linkhub.yaml
+   url: http://fidsu.linkhub.one/link/dFmXJ1lcukSdZzVl?clash=1&extend=1
+   interval: 3700
+   health-check:
+     enable: true
+     url: http://www.gstatic.com/generate_204
+     interval: 300
+
+  # coffeecloud:
+  #  type: http
+  #  path: ./proxys/coffeecloud.yaml
+  #  url: https://coffeecloud.top/api/v1/client/subscribe?token=4b6d136afc960327fd8150c0adb1f539
+  #  interval: 3800
+  #  health-check:
+  #    enable: true
+  #    url: http://www.gstatic.com/generate_204
+  #    interval: 300
+
+
+            
+proxy-groups:
+  - name: 手动切换
+    type: select
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Rocket.png
+    use: &V
+      # - Personal
+      - mojie
+      - linkhub
+      # - InfiniPort
+    proxies:
+
+    
+       
+  - name: 国外网站
+    type: select
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png
+    proxies: &G
+      - 手动切换
+      - DIRECT
+
+
+  - name: 国内网站
+    type: select
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China_Map.png
+    proxies: &C
+      - DIRECT
+      - 手动切换
+
+
+      
+  - name: YouTube
+    type: select
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
+    proxies:
+      *G
+    use: *V
+
+
+  # - name: PrimeVideo服务
+  #   type: select
+  #   proxies:
+  #     *G
+  #   use: *V
+
+  # - name: NETFLIX
+  #   type: select
+  #   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png
+  #   proxies:
+  #     *G
+  #   use: *V
+
+  - name: Disney+
+    type: url-test
+    proxies:
+    use: *V
+    url: 'http://www.gstatic.com/generate_204'
+    interval: 300
+    filter: '狮城|新加坡|台湾|SG|TW'
+
+  # - name: 苹果服务
+  #   type: select
+  #   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png
+  #   proxies:
+  #     *G
+  #   use: *V
+
+  - name: 微软服务
+    type: select
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png
+    proxies:
+      *G
+    use: *V
+
+  # - name: PayPal服务
+  #   type: select
+  #   proxies:
+  #     *G
+  #   use: *V
+
+  # - name: HBO服务
+  #   type: select
+  #   proxies:
+  #     *G
+  #   use: *V
+
+  # - name: friDay影音
+  #   type: url-test
+  #   proxies:
+  #   use: *V
+  #   url: 'http://www.gstatic.com/generate_204'
+  #   interval: 300
+  #   filter: 'Taiwan 03'
+
+  # - name: HamiVideo服务
+  #   type: url-test
+  #   proxies:
+  #   use: *V
+  #   url: 'http://www.gstatic.com/generate_204'
+  #   interval: 300
+  #   filter: 'Taiwan 03'
+
+  - name: 网易音乐
+    type: select
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netease_Music.png
+    proxies:
+      *C
+    use: *V
+
+  - name: 哔哩哔哩
+    type: select
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/bilibili_3.png
+    proxies:
+      *C
+    use: *V
+
+  - name: 游戏平台
+    type: select
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png
+    proxies:
+      *G
+    use: *V
+
+  - name: Google服务
+    type: select
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png
+    proxies:
+      *G
+    use: *V
+
+  - name: AdBlock
+    type: select
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
+    proxies:
+      - REJECT
+      - DIRECT
+      - 手动切换
+
+
+      
+  - name: 漏网之鱼
+    type: select
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png
+    proxies:
+      *G
+    use: *V
+
+
+    
+rule-providers:
+
+  Adblock-Domain:
+    type: http
+    behavior: domain
+    url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/AdvertisingLite/AdvertisingLite_Domain.yaml"
+    path: ./ruleset/AdDomain.yaml
+    interval: 86400
+
+  Google:
+    type: http
+    behavior: classical
+    url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Google/Google.yaml"
+    path: ./ruleset/Google.yaml
+    interval: 86400
+        
+  YouTube:
+    type: http
+    behavior: classical
+    url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/YouTube/YouTube.yaml"
+    path: ./ruleset/YouTube.yaml
+    interval: 86400
+
+  # Netflix:
+  #   type: http
+  #   behavior: classical
+  #   url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Netflix/Netflix.yaml"
+  #   path: ./ruleset/Netflix.yaml
+  #   interval: 86400
+
+  Disney:
+    type: http
+    behavior: classical
+    url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Disney/Disney.yaml"
+    path: ./ruleset/Disney.yaml
+    interval: 86400
+    
+  # Apple:
+  #   type: http
+  #   behavior: classical
+  #   url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Apple/Apple.yaml"
+  #   path: ./ruleset/Apple.yaml
+  #   interval: 86400
+
+  Microsoft:
+    type: http
+    behavior: classical
+    url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Microsoft/Microsoft.yaml"
+    path: ./ruleset/Microsoft.yaml
+    interval: 86400
+
+  NetEaseMusic:
+    type: http
+    behavior: classical
+    url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/NetEaseMusic/NetEaseMusic.yaml"
+    path: ./ruleset/NetEaseMusic.yaml
+    interval: 86400
+
+  BiliBili:
+    type: http
+    behavior: classical
+    url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/BiliBili/BiliBili.yaml"
+    path: ./ruleset/BiliBili.yaml
+    interval: 86400
+
+  Game:
+    type: http
+    behavior: classical
+    url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Game/Game.yaml"
+    path: ./ruleset/Game.yaml
+    interval: 86400
+
+  PackageName:
+    type: http
+    behavior: classical
+    url: "https://ghproxy.com/https://raw.githubusercontent.com/Infatuation-Fei/rule/main/Clash/Rule/Android_Package_Name_Proxy.yaml"
+    path: ./ruleset/PackageName.yaml
+    interval: 86400
+
+  China:
+    type: http
+    behavior: classical
+    url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/China/China.yaml"
+    path: ./ruleset/China.yaml
+    interval: 86400
+
+  Global:
+    type: http
+    behavior: domain
+    url: "https://ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/proxy.txt"
+    path: ./ruleset/Global-Domain.yaml
+    interval: 86400
+
+  Lan:
+    type: http
+    behavior: classical
+    url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Lan/Lan.yaml"
+    path: ./ruleset/lan.yaml
+    interval: 86400
+    
+  # Paypal:
+  #   type: http
+  #   behavior: classical
+  #   url: "https://gitea.kyosakuyo.com/KyoSakuyo/SakuyoDb/raw/branch/main/paypal.yaml"
+  #   path: ./ruleset/paypalpersonal.yaml
+  #   interval: 86400
+
+  # PrimeVideo:
+  #   type: http
+  #   behavior: classical
+  #   url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/AmazonPrimeVideo/AmazonPrimeVideo.yaml"
+  #   path: ./ruleset/AmazonPrimeVideo.yaml
+  #   interval: 86400
+
+  # HBO:
+  #   type: http
+  #   behavior: classical
+  #   url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/HBO/HBO.yaml"
+  #   path: ./ruleset/HBO.yaml
+  #   interval: 86400
+
+  # friDay:
+  #   type: http
+  #   behavior: classical
+  #   url: "https://gitea.kyosakuyo.com/KyoSakuyo/SakuyoDb/raw/branch/main/friday.yaml"
+  #   path: ./ruleset/friDaypersonal.yaml
+  #   interval: 86400
+
+  # HamiVideo:
+  #   type: http
+  #   behavior: classical
+  #   url: "https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/HamiVideo/HamiVideo.yaml"
+  #   path: ./ruleset/friDaypersonal.yaml
+  #   interval: 86400
+
+
+rules:
+  - RULE-SET,Adblock-Domain,AdBlock
+  - RULE-SET,YouTube,YouTube
+  # - RULE-SET,Netflix,NETFLIX
+  - RULE-SET,Disney,Disney+
+  # - RULE-SET,Apple,苹果服务
+  - RULE-SET,Microsoft,微软服务
+  - RULE-SET,NetEaseMusic,网易音乐
+  - RULE-SET,BiliBili,哔哩哔哩
+  # - RULE-SET,Paypal,PayPal服务
+  # - RULE-SET,HBO,HBO服务
+  # - RULE-SET,PrimeVideo,PrimeVideo服务
+  - RULE-SET,Google,Google服务
+  # - RULE-SET,friDay,friDay影音
+  # - RULE-SET,HamiVideo,HamiVideo服务
+  - RULE-SET,Game,游戏平台
+  - RULE-SET,PackageName,国外网站
+  - RULE-SET,Global,国外网站
+  - RULE-SET,China,国内网站
+  - RULE-SET,Lan,DIRECT
+  - GEOIP,CN,国内网站
+  - MATCH,漏网之鱼
