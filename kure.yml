@@ -51,7 +51,7 @@ proxy-providers:
   mojie:
    type: http
    path: ./proxys/mojie.yaml
-   url: https://mojie.art/api/v1/client/subscribe?token=4fc93c89a6fba8189f4d8c7eb1ca61a6
+   url: https://mojie.site/api/v1/client/subscribe?token=4fc93c89a6fba8189f4d8c7eb1ca61a6
    interval: 3700
    health-check:
      enable: true
